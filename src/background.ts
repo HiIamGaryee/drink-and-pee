@@ -1,6 +1,6 @@
 /// <reference types="chrome" />
 
-chrome.runtime.onMessage.addListener(({ type, minutes }) => {
+chrome.runtime.onMessage.addListener(({ type, minutes }: { type: string; minutes: number }) => {
   chrome.alarms.clearAll();
 
   if (type === 'start-custom' && typeof minutes === 'number' && minutes > 0) {
@@ -12,12 +12,6 @@ chrome.runtime.onMessage.addListener(({ type, minutes }) => {
 });
 
 chrome.alarms.onAlarm.addListener(() => {
-  chrome.tabs.query({ active: true, currentWindow: true }, ([tab]) => {
-    if (tab?.id) {
-      chrome.scripting.executeScript({
-        target: { tabId: tab.id },
-        files: ['content.ts'],
-      });
-    }
-  });
+  // Send a message to all extension views/popups to show the banner
+  chrome.runtime.sendMessage({ type: 'show-banner' });
 });

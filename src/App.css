@@ -60,3 +60,59 @@
   justify-content: center;
   overflow: hidden;
 }
+
+:root {
+  --theme-primary: #39ff14; /* neon green default */
+  --theme-btn-text: #fff;
+  --theme-btn-hover: #0f0;
+  background: #fff;
+  color: #222;
+}
+[data-theme="dark"] {
+  --theme-primary: #222;
+}
+[data-theme="light"] {
+  --theme-primary: #39ff14;
+}
+[data-theme="pink"] {
+  --theme-primary: #ec4899;
+}
+[data-theme="yellow"] {
+  --theme-primary: #facc15;
+}
+[data-theme="pride"] {
+  --theme-primary: #6366f1;
+}
+[data-theme="custom"] {
+  --theme-primary: #0ff;
+}
+
+[data-theme] {
+  background: #fff !important;
+  color: #222 !important;
+}
+
+[data-theme] button,
+[data-theme] .themed-btn {
+  background: var(--theme-primary) !important;
+  color: var(--theme-btn-text) !important;
+  border: none;
+}
+[data-theme] button:hover,
+[data-theme] .themed-btn:hover {
+  filter: brightness(0.9);
+}
+[data-theme] .active-tab {
+  background: var(--theme-primary) !important;
+  color: #fff !important;
+}
+[data-theme] .highlight {
+  outline: 2px solid var(--theme-primary) !important;
+}
+
+html, body, #root, [data-theme] {
+  min-height: 1200px;
+  min-width: 320px;
+  background: #fff;
+  color: #222;
+}
