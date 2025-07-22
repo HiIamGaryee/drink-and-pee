@@ -47,7 +47,3 @@ A hydration reminder Chrome extension with a retro pixel-art inspired UI.
 
 - UI inspired by retro pixel-art and the 'Snake on the Throne' style.
 - Uses [Tabler Icons](https://tabler.io/icons) and [Tailwind CSS](https://tailwindcss.com/).
-
----
-
-@vasva_design for the pixel-art presentation inspiration.
