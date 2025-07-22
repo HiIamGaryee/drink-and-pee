@@ -2,10 +2,18 @@ import { useCallback, useState, useEffect } from "react";
 import type { ChangeEvent } from "react";
 import { IconSettings } from "@tabler/icons-react";
 
-const Button = ({ label, onClick }: { label: string; onClick: () => void }) => (
+type ButtonProps = {
+  label: string;
+  onClick: () => void;
+  className?: string;
+};
+
+const Button = ({ label, onClick, className }: ButtonProps) => (
   <button
     onClick={onClick}
-    className="mt-2 w-full rounded bg-sky-600 px-4 py-2 text-white hover:bg-sky-700"
+    className={`px-3 py-1 rounded bg-blue-500 text-white hover:bg-blue-600 ${
+      className || ""
+    }`}
   >
     {label}
   </button>
@@ -104,15 +112,8 @@ function Product({ onBack }: { onBack: () => void }) {
             <img
               src={banner.src}
               alt={banner.name}
-              className={`w-32 h-20 object-cover rounded border-2 mb-1 cursor-pointer ${
-                multiSelect
-                  ? selectedBanners.includes(banner.src)
-                    ? "border-sky-500"
-                    : "border-transparent"
-                  : selectedBanner === banner.src
-                  ? "border-sky-500"
-                  : "border-transparent"
-              }`}
+              className="object-cover rounded border"
+              style={{ width: 250, height: 250, aspectRatio: "1 / 1" }}
               onClick={() => handleBannerClick(banner.src)}
             />
             <span className="text-xs">{banner.name}</span>
@@ -278,6 +279,8 @@ export default function App() {
   const [page, setPage] = useState<"main" | "settings" | "product">("main");
   const [remaining, setRemaining] = useState<number | null>(null);
   const [intervalId, setIntervalId] = useState<number | null>(null);
+  // Add state for notification
+  const [notification, setNotification] = useState<string | null>(null);
 
   // Query alarm on mount
   useEffect(() => {
@@ -315,18 +318,29 @@ export default function App() {
     };
   }, []);
 
+  // Add stop/cancel logic
+  const stopReminder = useCallback(() => {
+    chrome.alarms.clearAll(() => {
+      setRemaining(null);
+      setNotification("Reminder stopped");
+      setTimeout(() => setNotification(null), 1500);
+    });
+  }, []);
+
   // Send one-time reminder
-  const sendOnce = useCallback(
-    (min: number) =>
-      chrome.runtime.sendMessage({ type: "start-custom", minutes: min }),
-    []
-  );
+  const sendOnce = useCallback((minutes: number) => {
+    chrome.runtime.sendMessage({ type: "start-custom", minutes }, () => {
+      setNotification("Set reminder success");
+      setTimeout(() => setNotification(null), 1500);
+    });
+  }, []);
   // Send recurring reminder
-  const sendRecurring = useCallback(
-    (min: number) =>
-      chrome.runtime.sendMessage({ type: "start-recurring", minutes: min }),
-    []
-  );
+  const sendRecurring = useCallback((minutes: number) => {
+    chrome.runtime.sendMessage({ type: "start-recurring", minutes }, () => {
+      setNotification("Set reminder success");
+      setTimeout(() => setNotification(null), 1500);
+    });
+  }, []);
 
   if (page === "settings") {
     return (
@@ -358,10 +372,17 @@ export default function App() {
         label={`Remind me once in ${minutes} min`}
         onClick={() => sendOnce(minutes)}
       />
+      <Button label="Stop" onClick={stopReminder} className="ml-2" />
       <Button
         label={`Remind me every ${minutes} min (recurring)`}
         onClick={() => sendRecurring(minutes)}
       />
+      <Button label="Stop" onClick={stopReminder} className="ml-2" />
+      {notification && (
+        <div className="fixed top-4 left-1/2 -translate-x-1/2 bg-green-500 text-white px-4 py-2 rounded shadow z-50 animate-fade-in">
+          {notification}
+        </div>
+      )}
       {remaining !== null && (
         <div className="mt-2 text-sm text-gray-700">
           Next reminder in: {remaining} min

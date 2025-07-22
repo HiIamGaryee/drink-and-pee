@@ -15,7 +15,7 @@
     "service_worker": "src/background.ts",
     "type": "module"
   },
-  "permissions": ["alarms"],
+  "permissions": ["alarms", "scripting", "tabs"],
   "content_scripts": [
     {
       "js": ["src/content.ts"],
