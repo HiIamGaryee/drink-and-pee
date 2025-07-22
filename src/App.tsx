@@ -96,7 +96,7 @@ function Product({ onBack }: { onBack: () => void }) {
           }}
           className="mx-2"
         />
-        <label className="font-medium">Multi-select</label>
+        <label className="font-medium">Multi-select Images</label>
       </div>
       <div className="flex flex-wrap gap-4 justify-center mb-4">
         {bannerOptions.map((banner) => (
@@ -126,7 +126,7 @@ function Product({ onBack }: { onBack: () => void }) {
       {multiSelect && customBanners.length > 0 && (
         <div className="mb-4">
           <span className="block mb-2 font-semibold">
-            Custom Uploaded Images:
+            Custom Uploaded Images Now:
           </span>
           <div className="flex flex-wrap gap-2 justify-center">
             {customBanners.map((src, idx) => (
