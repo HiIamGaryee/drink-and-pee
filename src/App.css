@@ -47,7 +47,7 @@
   to { opacity: 1; transform: translateY(0); }
 }
 .animate-fade-in {
-  animation: fade-in 0.3s ease;
+  animation: fade-in 0.2s ease;
 }
 
 /* Ensure image containers are square and 250x250px */
